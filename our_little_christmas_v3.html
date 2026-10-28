@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#571719">
+<title>Our Little Christmas</title>
+<style>
+:root{--wine:#641b20;--wine2:#812a30;--wine3:#451215;--gold:#d8b879;--gold2:#f0dcae;--cream:#f8f0e3;--paper:#fff9ef;--ink:#3e2924;--green:#243b30;--muted:#c5b39b;--line:rgba(216,184,121,.4)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#211815;color:var(--cream);font-family:Georgia,"Noto Serif KR","Apple SD Gothic Neo",serif;overflow-x:hidden}button,input,textarea{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#snowCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:20;opacity:.7}
+.music-toggle{position:fixed;right:12px;top:12px;z-index:25;border:1px solid var(--line);background:#261914d9;color:var(--gold2);border-radius:99px;padding:10px 13px;font-size:11px;backdrop-filter:blur(8px)}
+.music-toggle.playing{background:var(--gold);color:#34231a}
+.hero{min-height:630px;position:relative;display:grid;place-items:center;overflow:hidden;text-align:center;padding:75px 20px 65px;background:radial-gradient(ellipse at 50% 5%,#81502e 0,#49281e 40%,#211815 78%)}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#1d120e22,#1d120ed9),radial-gradient(circle at 9% 22%,#ffe3a7 0 2px,transparent 5px),radial-gradient(circle at 19% 40%,#e6bd76 0 2px,transparent 5px),radial-gradient(circle at 82% 13%,#ffe3a7 0 3px,transparent 7px),radial-gradient(circle at 92% 35%,#e6bd76 0 2px,transparent 5px),radial-gradient(circle at 76% 64%,#e6bd76 0 2px,transparent 5px)}
+.hero-content{position:relative;z-index:1;width:min(100%,720px)}.eyebrow,.kicker{font:10px Arial,sans-serif;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.hero h1{font-size:clamp(43px,10vw,84px);line-height:.95;letter-spacing:-.045em;font-weight:400;margin:24px 0 20px;color:#fff1d7}.hero h1 em{display:block;font-style:normal;font-size:.62em;letter-spacing:.09em;color:var(--gold2);margin-top:15px}
+.hero p{font-size:13px;line-height:2;color:#e3d1b7;max-width:380px;margin:0 auto;word-break:keep-all}.ornament{color:var(--gold);font-size:19px;margin:24px 0}.ornament:before,.ornament:after{content:"";display:inline-block;width:45px;height:1px;background:#a47c47;vertical-align:middle;margin:0 13px}
+.countdown{display:flex;justify-content:center;gap:8px;margin:22px 0 8px}.timebox{min-width:63px;padding:11px 7px 9px;border:1px solid var(--line);background:#1b110d55}.timebox strong{display:block;font-size:25px;font-weight:400;color:#fff2d8}.timebox span{display:block;font:8px Arial,sans-serif;letter-spacing:.15em;color:#d8bd8d;margin-top:5px}
+.trip-pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:99px;padding:10px 14px;margin-top:17px;font-size:11px;color:#f0dcb8}
+main{max-width:1000px;margin:auto;padding:55px 18px 65px}.section-head{text-align:center;margin-bottom:28px}.section-head h2{font-size:clamp(27px,5vw,39px);font-weight:400;margin:12px 0;color:#fff0d5}.section-head p{font-size:12px;line-height:1.9;color:var(--muted);margin:0}
+.calendar-frame{max-width:850px;margin:auto;padding:11px;background:linear-gradient(145deg,#842e32,#59171b 72%);border:1px solid #bd8f5b;box-shadow:0 22px 60px #09060588,inset 0 0 0 2px #431114;border-radius:3px}
+.calendar-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:20px 16px 22px;border:1px solid #b9825d;margin-bottom:10px}.calendar-top small{font:8px Arial,sans-serif;letter-spacing:.2em;color:#e0c38b;display:block;margin-bottom:8px}.calendar-top strong{font-size:clamp(18px,4vw,29px);font-weight:400;letter-spacing:.07em;color:#f4dba8}.seal{font-size:27px;color:var(--gold)}
+.doors{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}.door{position:relative;min-height:116px;perspective:700px;background:linear-gradient(145deg,#4b1317,#6d2025);border:1px solid #c19262;overflow:visible;box-shadow:inset 0 0 0 3px #3d101433}
+.door-button{position:absolute;inset:0;width:100%;height:100%;border:0;background:linear-gradient(145deg,#8b3034,#641a20);color:#e8cb94;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transform-origin:left center;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.2,.72,.25,1),filter .2s;z-index:2;box-shadow:inset 0 0 0 3px #40111533}
+.door-button:before{content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);width:22px;height:5px;border-radius:0 0 10px 10px;background:#421216}
+.door-button .num{font-size:25px;line-height:1;margin-top:5px}.door-button .symbol{font-size:19px}.door-button .caption{font:7px Arial,sans-serif;letter-spacing:.1em;color:#d9b67b}
+.door:hover:not(.locked) .door-button{filter:brightness(1.14)}.door.locked .door-button{cursor:default;filter:saturate(.75)}
+.door.opened{background:linear-gradient(145deg,#d8c49b,#a48a5c)}.door.opened .door-button{transform:rotateY(-112deg);pointer-events:none}.door.opened .door-button .num,.door.opened .door-button .caption{opacity:.85}
+.door.opened:after{content:"✦";position:absolute;inset:0;display:grid;place-items:center;font-size:31px;color:#65432b}
+.door.today{outline:2px solid #f2d7a0;outline-offset:2px;box-shadow:0 0 19px #e4bd6a55}.door.today:after{content:"TODAY";position:absolute;right:3px;top:3px;font:6px Arial,sans-serif;letter-spacing:.06em;color:#fff0d0;z-index:4}
+.calendar-foot{display:flex;justify-content:space-between;gap:10px;padding:17px 6px 5px;color:#dfbd85;font:8px Arial,sans-serif;letter-spacing:.13em}.legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:17px 0 0;font-size:10px;color:#c4b29d}
+.progress-wrap{max-width:850px;margin:14px auto 0}.progress-label{display:flex;justify-content:space-between;color:#d8bd8d;font:9px Arial,sans-serif;letter-spacing:.08em;margin-bottom:7px}.progress{height:4px;background:#50352a}.progress>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#987341,#f0dcae);transition:width .4s}
+.mission-section{max-width:850px;margin:48px auto 0}.mission-card{border:1px solid #9b784b;background:linear-gradient(145deg,#392720,#241a16);padding:22px;position:relative;overflow:hidden}.mission-top{display:flex;justify-content:space-between;gap:12px;align-items:center}.mission-top h3{font-size:23px;font-weight:400;color:#f3dfb8;margin:8px 0}.mission-tag{font:9px Arial,sans-serif;letter-spacing:.12em;border:1px solid #8d7048;color:#e5c98e;padding:7px 9px;white-space:nowrap}.mission-task{font-size:14px;line-height:1.8;color:#f7ead1;margin:12px 0}.mission-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.mission-actions button,.ending-card button{border:1px solid #d1ad77;background:#d6b77d;color:#34231a;padding:11px 15px;font-size:11px}.mission-actions button:disabled{opacity:.6;cursor:default}.mission-stats{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.stat-chip,.badge-chip{border:1px solid #624c35;background:#211914;color:#dfc28c;padding:8px 10px;font-size:10px}.badge-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}.badge-chip.locked{opacity:.42;filter:grayscale(1)}.ending-section{max-width:850px;margin:36px auto 0}.ending-card{border:1px solid #a88654;background:radial-gradient(ellipse at top,#6b3428,#2a1b17 75%);padding:26px;text-align:center}.ending-card h3{font-weight:400;font-size:25px;color:#f3d9a6;margin:10px 0}.ending-card p{font-size:12px;line-height:1.9;color:#d9c5a5}.ending-lock{font-size:11px;color:#bfa47b;margin:12px 0}.ending-card.unlocked{box-shadow:0 0 32px #d6b77d33}.mission-done-note{font-size:10px;color:#e0c994;margin-top:10px}
+.village-section{margin:62px auto 0;max-width:850px}.village{position:relative;overflow:hidden;min-height:220px;border:1px solid #72543a;background:linear-gradient(#182838,#293b43 65%,#d9d4c2 65%,#eee1c8);padding:20px 12px 0;text-align:center}
+.village .village-sky{position:absolute;inset:0;background:radial-gradient(circle at 20% 25%,#f7d99b 0 1px,transparent 2px),radial-gradient(circle at 72% 19%,#f7d99b 0 1px,transparent 2px),radial-gradient(circle at 48% 15%,#f7d99b 0 1px,transparent 2px);pointer-events:none}
+.village h3{position:relative;z-index:1;font-size:22px;font-weight:400;color:#fff0d5;margin:0 0 6px}.village p{position:relative;z-index:1;font-size:10px;color:#d8d0c2;margin:0}
+.village-scene{position:relative;height:130px;display:flex;justify-content:center;align-items:flex-end;gap:8px;z-index:1}
+.house{position:relative;width:72px;height:64px;background:#7a3430;border:1px solid #d1ad77;transition:filter .5s,transform .5s}.house:before{content:"";position:absolute;left:-8px;top:-24px;width:0;height:0;border-left:43px solid transparent;border-right:43px solid transparent;border-bottom:30px solid #4d2425}
+.house:after{content:"";position:absolute;left:10px;top:15px;width:12px;height:17px;background:#f1d18c;box-shadow:25px 0 0 #f1d18c;opacity:.18;transition:opacity .5s,box-shadow .5s}
+.house.lit:after{opacity:1;box-shadow:25px 0 0 #f1d18c,0 0 14px #ffd989,25px 0 14px #ffd989}
+.house .doorway{position:absolute;bottom:0;left:29px;width:14px;height:27px;background:#35191a}
+.tree{align-self:flex-end;position:relative;width:0;height:0;border-left:25px solid transparent;border-right:25px solid transparent;border-bottom:90px solid #244735;filter:brightness(.55);transition:filter .5s}.tree:before{content:"";position:absolute;left:-20px;top:28px;border-left:20px solid transparent;border-right:20px solid transparent;border-bottom:70px solid #315b3e}.tree:after{content:"✦";position:absolute;left:-6px;top:-15px;color:#f0d48e;font-size:17px}.tree.lit{filter:brightness(1.3) drop-shadow(0 0 8px #e6bd72)}
+.tree{cursor:pointer;isolation:isolate}.tree:focus-visible,.house:focus-visible{outline:2px solid #f0dcae;outline-offset:5px}.tree .tree-star{position:absolute;top:-22px;left:-8px;color:#fff0b6;font-size:20px;text-shadow:0 0 10px #ffd989;z-index:2}.tree .bauble{position:absolute;width:7px;height:7px;border-radius:50%;background:#d8b879;box-shadow:0 0 7px #f8df9b;opacity:0;transition:opacity .35s,transform .35s;z-index:2}.tree .bauble:nth-child(2){left:-12px;top:22px}.tree .bauble:nth-child(3){left:5px;top:40px;background:#b75b50}.tree .bauble:nth-child(4){left:-17px;top:57px;background:#f0dcae}.tree .bauble:nth-child(5){left:11px;top:65px;background:#b75b50}.tree .bauble:nth-child(6){left:-5px;top:78px}.tree.growth-1 .bauble:nth-child(-n+3),.tree.growth-2 .bauble:nth-child(-n+4),.tree.growth-3 .bauble:nth-child(-n+6){opacity:1;transform:scale(1.05)}.tree.growth-2 .bauble,.tree.growth-3 .bauble{width:8px;height:8px}.house{cursor:pointer}.house:focus-visible{outline-offset:4px}.village-decor{position:absolute;z-index:3;bottom:58px;cursor:pointer;border:0;background:transparent;color:#fff0c4;font-size:23px;text-shadow:0 0 10px #f8d98b;transition:transform .25s; padding:3px}.village-decor:hover{transform:translateY(-5px) scale(1.12)}.village-decor.snowman{left:calc(50% + 135px);font-size:25px}.village-decor.bell{left:calc(50% - 145px);bottom:84px}.village-decor:focus-visible{outline:2px solid #f0dcae}
+.busan-ticket{max-width:850px;margin:26px auto 0;border:1px solid #c7a66b;padding:8px;background:#f8eedb;color:#493027;box-shadow:0 12px 35px #09060555}.ticket-inner{position:relative;border:1px dashed #a9804f;padding:22px 18px;text-align:center;overflow:hidden;background:radial-gradient(circle at 10% 20%,#d5bd8a44 0 2px,transparent 3px),linear-gradient(120deg,#fff8e8,#f1dfbf)}.ticket-kicker{font:9px Arial,sans-serif;letter-spacing:.24em;color:#8b302f}.ticket-inner h3{font-weight:400;font-size:27px;color:#782a2d;margin:9px 0}.ticket-route{display:flex;align-items:center;justify-content:center;gap:12px;margin:18px auto;color:#5c4939;font:11px Arial,sans-serif;letter-spacing:.13em}.ticket-route .route-line{height:1px;width:60px;background:#b38c55;position:relative}.ticket-route .route-line:after{content:'✦';position:absolute;left:50%;top:-9px;transform:translateX(-50%);background:#f6e9d0;padding:0 5px;color:#a47b43}.ticket-copy{font-size:12px;line-height:1.9;max-width:420px;margin:0 auto 15px}.ticket-meta{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;font:9px Arial,sans-serif;color:#8a6945;letter-spacing:.1em}.ticket-actions{margin-top:18px}.ticket-actions button{border:1px solid #8c302f;background:#79292c;color:#fff0d6;padding:11px 17px;font-size:11px}.ticket-actions button:disabled{opacity:.55;cursor:default}.ticket-lock{font-size:10px;color:#8d7355;margin-top:10px}.busan-ticket.revealed{animation:fadeUp .7s ease both;box-shadow:0 0 30px #d8b87933}.sparkle-burst{position:absolute;pointer-events:none;z-index:10;animation:sparkleFly .9s ease-out forwards;color:#ffe6a2;text-shadow:0 0 8px #ffd56e;font-size:18px}@keyframes sparkleFly{0%{opacity:0;transform:translate(0,0) scale(.4)}25%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.3)}}
+.village-progress{position:relative;z-index:1;margin-top:9px;font:9px Arial,sans-serif;letter-spacing:.1em;color:#5d4933}
+.feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:55px auto 0;max-width:850px}.panel{border:1px solid #624b36;background:linear-gradient(145deg,#30241e,#241b17);padding:22px;min-width:0}.panel h3{font-weight:400;font-size:20px;color:#f2dfbf;margin:0 0 7px}.panel .sub{font:9px Arial,sans-serif;letter-spacing:.17em;color:var(--gold);text-transform:uppercase}.panel p{font-size:11px;line-height:1.8;color:#c1b39d}.panel button,.secondary-btn{border:1px solid #8e754f;background:transparent;color:#e5cc9a;padding:9px 12px;font-size:10px}
+.checklist{display:grid;gap:8px;margin:15px 0}.check-row{display:flex;gap:9px;align-items:center;color:#e3d3b8;font-size:12px;line-height:1.5}.check-row input{accent-color:#c5a365;width:15px;height:15px;flex-shrink:0}.check-row.done span{text-decoration:line-through;color:#9d8a70}
+.memory-list{display:grid;gap:8px;margin:14px 0}.memory-item{border:1px solid #5c4735;background:#211914;padding:10px;display:flex;gap:10px;align-items:center}.memory-item .mem-icon{width:34px;height:34px;border:1px solid #8a704b;display:grid;place-items:center;color:#d8b879;flex-shrink:0}.memory-item strong{display:block;font-size:11px;font-weight:400;color:#f0dfc2}.memory-item small{display:block;font-size:9px;color:#bba68c;margin-top:4px}.memory-item button{margin-left:auto;border:0;background:transparent;color:#d8b879;font-size:11px}
+.form-row{display:grid;gap:8px;margin:12px 0}.form-row label{font-size:10px;color:#d8bd8d}.form-row input,.form-row textarea,.settings input{width:100%;padding:10px;border:1px solid #71583d;background:#1f1713;color:#fff0d6;border-radius:0;font-size:12px}.form-row textarea{min-height:75px;resize:vertical}
+.note-card{max-width:700px;margin:50px auto 0;padding:25px;border:1px solid #755d42;background:linear-gradient(135deg,#30231d,#241b17);text-align:center}.note-card .star{font-size:23px;color:var(--gold)}.note-card h3{font-size:22px;font-weight:400;color:#f2dfbd;margin:12px 0}.note-card p{font-size:12px;line-height:1.9;color:#c6b49e;margin:0}
+.final-card{display:none;max-width:700px;margin:24px auto 0;padding:25px;border:1px solid #c49a5f;background:linear-gradient(145deg,#76262a,#3e1719);text-align:center;box-shadow:0 0 35px #d3aa6033}.final-card.show{display:block;animation:fadeUp .9s ease both}.final-card h3{font-weight:400;font-size:26px;color:#f5ddb0}.final-card p{white-space:pre-wrap;line-height:2;font-size:13px;color:#f3e5cc}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+footer{text-align:center;padding:25px 15px 40px;color:#806b58;font:8px Arial,sans-serif;letter-spacing:.2em}
+.modal-backdrop{position:fixed;inset:0;background:#100b09e8;display:none;align-items:center;justify-content:center;padding:16px;z-index:30}.modal-backdrop.show{display:flex;animation:fadeUp .25s ease both}
+.modal{width:min(100%,440px);max-height:88vh;overflow:auto;background:var(--paper);color:var(--ink);padding:28px 24px 24px;position:relative;box-shadow:0 20px 80px #0008;border:5px double #bda071;text-align:center}
+.modal .close{position:absolute;right:11px;top:7px;border:0;background:transparent;font-size:23px;color:#77533b}.modal-number{font:9px Arial,sans-serif;letter-spacing:.2em;color:#987448}.modal h3{font-size:26px;font-weight:400;margin:12px 0;color:#752d2a}.modal .gift-icon{font-size:36px;margin:10px 0}.modal p{font-size:13px;line-height:1.9;white-space:pre-wrap;word-break:keep-all}.modal .tiny{font-size:10px;color:#9a826a}
+.settings{display:none;max-width:850px;margin:20px auto;border:1px solid #5d4a36;padding:20px;background:#2a211b}.settings.show{display:block}.settings h3{font-weight:400;margin-top:0}.settings label{display:block;font-size:11px;color:#d7c5aa;margin:12px 0 5px}.settings input{margin-top:4px}.settings .save{background:#d3b47b;color:#34231a;border:0;padding:11px 15px;margin-top:14px;width:100%}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#f6e8cc;color:#4b3024;padding:11px 16px;font-size:11px;z-index:40;display:none;max-width:90%;text-align:center}.toast.show{display:block}
+.sync-status{font-size:10px;line-height:1.8;color:#c9b494;margin-top:8px}.sync-status strong{color:#e7d2a9;font-weight:400}
+@media(max-width:650px){.hero{min-height:570px;padding:75px 16px 50px}.countdown{gap:5px}.timebox{min-width:53px;padding:10px 4px}.timebox strong{font-size:22px}main{padding:40px 11px 50px}.calendar-frame{padding:7px}.calendar-top{padding:16px 10px}.doors{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.door{min-height:94px}.door-button .num{font-size:23px}.feature-grid{grid-template-columns:1fr;margin-top:40px}.panel{padding:19px}.village{min-height:210px}.village-scene{gap:5px}.house{width:60px;height:55px}.house:before{left:-6px;border-left-width:36px;border-right-width:36px;top:-21px;border-bottom-width:26px}.house:after{left:8px;width:10px;height:15px;box-shadow:22px 0 0 #f1d18c}.house.lit:after{box-shadow:22px 0 0 #f1d18c,0 0 12px #ffd989,22px 0 12px #ffd989}.house .doorway{left:24px;width:12px;height:23px}.tree{border-left-width:20px;border-right-width:20px;border-bottom-width:76px}.village-decor.snowman{left:calc(50% + 105px)}.village-decor.bell{left:calc(50% - 115px)}.ticket-inner{padding:19px 10px}.ticket-inner h3{font-size:23px}.ticket-route{gap:8px}.ticket-route .route-line{width:35px}.tree:before{left:-16px;top:25px;border-left-width:16px;border-right-width:16px;border-bottom-width:58px}.calendar-foot{font-size:7px}.music-toggle{right:8px;top:8px;padding:9px 11px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="snowCanvas" aria-hidden="true"></canvas>
+<button class="music-toggle" id="musicToggle" onclick="toggleMusic()" aria-pressed="false">♫ 캐럴 켜기</button>
+<header class="hero">
+ <div class="hero-content">
+  <div class="eyebrow">A little magic, just for us</div>
+  <h1>Our Little <em>Christmas</em></h1>
+  <p>올해 겨울, 우리가 함께 기다리는 작은 기적.<br>하루에 하나씩 열어 보며 크리스마스까지 같이 가자.</p>
+  <div class="ornament">✧</div>
+  <div class="eyebrow">Until Christmas</div>
+  <div class="countdown">
+   <div class="timebox"><strong id="days">--</strong><span>DAYS</span></div><div class="timebox"><strong id="hours">--</strong><span>HOURS</span></div><div class="timebox"><strong id="mins">--</strong><span>MINUTES</span></div><div class="timebox"><strong id="secs">--</strong><span>SECONDS</span></div>
+  </div>
+  <div class="trip-pill"><span>✦</span><span id="trip-countdown">우리의 부산 여행도 기다리는 중</span></div>
+ </div>
+</header>
+<main>
+<section>
+ <div class="section-head"><div class="kicker">October 29 — December 25</div><h2>Open a little happiness</h2><p>10월 29일부터 12월 25일까지, 하루에 하나씩 열어 봐.<br>오늘 날짜까지 열린 선물은 언제든 다시 볼 수 있어.</p></div>
+ <div class="calendar-frame">
+  <div class="calendar-top"><div><small>THE MOST WONDERFUL TIME OF THE YEAR</small><strong>ADVENT CALENDAR</strong></div><div class="seal">✳</div></div>
+  <div class="doors" id="doors"></div>
+  <div class="calendar-foot"><span>MADE WITH LOVE</span><span>OCT 29 — DEC 25 ✦</span></div>
+ </div>
+ <div class="progress-wrap"><div class="progress-label"><span>OUR LITTLE MEMORIES</span><span id="progressText">0 / 58 OPENED</span></div><div class="progress"><span id="progressBar"></span></div></div>
+ <div class="legend"><span>✧ 아직 열기 전</span><span>✦ 열어 본 선물</span><span>♙ 잠긴 선물</span></div>
+</section>
+<section class="mission-section" id="dailyMission">
+ <div class="section-head"><div class="kicker">A tiny quest for two</div><h2>오늘의 커플 미션</h2><p>부담 없이 둘이 함께 해 보는 작은 미션이야. 완료하면 마을에 별빛이 하나 더 쌓여.</p></div>
+ <div class="mission-card"><div class="mission-top"><div><div class="eyebrow" id="missionDate">TODAY'S LITTLE QUEST</div><h3 id="missionTitle">오늘의 미션</h3></div><div class="mission-tag" id="missionReward">✦ 별빛 +1</div></div>
+  <p class="mission-task" id="missionTask">오늘 서로에게 고마웠던 일 하나를 말해 주기.</p>
+  <div class="mission-actions"><button id="missionCompleteBtn" onclick="completeMission()">미션 완료하고 별 받기</button><span class="mission-done-note" id="missionDoneNote">함께 완료 버튼을 눌러 기록해 줘.</span></div>
+  <div class="mission-stats"><span class="stat-chip" id="missionCount">완료 미션 0개</span><span class="stat-chip" id="starCount">모은 별빛 0개</span><span class="stat-chip" id="streakCount">연속 미션 0일</span></div>
+  <div class="badge-row" id="badgeRow"></div>
+ </div>
+</section>
+<section class="village-section">
+ <div class="section-head"><div class="kicker">A village made of memories</div><h2>Our Christmas Village</h2><p>상자를 열 때마다 마을에 불빛이 하나씩 늘어나.</p></div>
+ <div class="village"><div class="village-sky"></div><h3>Little Winter Town</h3><p id="villageCaption">우리의 첫 불빛을 기다리는 중</p><div class="village-scene" id="villageScene"><div class="tree growth-0" id="villageTree" role="button" tabindex="0" aria-label="크리스마스트리 장식 보기"><span class="tree-star">✦</span><span class="bauble"></span><span class="bauble"></span><span class="bauble"></span><span class="bauble"></span><span class="bauble"></span></div><div class="house" role="button" tabindex="0" aria-label="작은 집 누르기"><div class="doorway"></div></div><div class="house" role="button" tabindex="0" aria-label="작은 집 누르기"><div class="doorway"></div></div><div class="house" role="button" tabindex="0" aria-label="작은 집 누르기"><div class="doorway"></div></div><button class="village-decor bell" onclick="interactDecor('bell')" aria-label="종 장식 누르기">♬</button><button class="village-decor snowman" onclick="interactDecor('snowman')" aria-label="눈사람 누르기">☃</button></div><div class="village-progress" id="villageProgress">0 LIGHTS IN OUR VILLAGE</div><p class="village-hint">마을의 트리, 집, 종, 눈사람을 눌러 봐.</p></div>
+</section>
+<section class="ending-section" id="finalQuest"><div class="section-head"><div class="kicker">December 25 · the final chapter</div><h2>부산으로 떠나는 마지막 퀘스트</h2><p>날짜별 선물과 미션으로 모은 추억을 가지고 크리스마스 엔딩을 열어 보자.</p></div>
+ <div class="ending-card" id="endingCard"><div class="ornament">✧ ✦ ✧</div><h3 id="endingTitle">우리의 마지막 퀘스트</h3><p id="endingDescription">12월 25일이 되면 마지막 장이 열려. 그전까지 선물과 미션을 하나씩 모아 보자.</p><div class="ending-lock" id="endingStatus">🔒 2026년 12월 25일에 열려</div><button id="endingButton" onclick="openEnding()" disabled>최종 엔딩 열기</button></div>
+</section>
+<section class="busan-ticket" id="busanTicket" aria-live="polite"><div class="ticket-inner"><div class="ticket-kicker">A LITTLE CHRISTMAS GETAWAY</div><h3>BUSAN · 우리 둘의 여행 티켓</h3><div class="ticket-route"><span>OUR HOME</span><span class="route-line"></span><span>BUSAN</span></div><p class="ticket-copy" id="ticketCopy">12월 25일에 이 티켓이 열려. 그날은 우리 둘이 새로운 추억을 만들러 떠나는 날이야.</p><div class="ticket-meta"><span>DATE · 25 DEC 2026</span><span>PASSENGERS · TWO HEARTS</span><span>MEMORIES · UNLIMITED</span></div><div class="ticket-actions"><button id="ticketRevealBtn" onclick="revealBusanTicket()" disabled>여행 티켓 공개하기</button></div><div class="ticket-lock" id="ticketLock">🔒 크리스마스 당일에 공개돼</div></div></section>
+<section class="feature-grid">
+ <article class="panel">
+  <div class="sub">Memory archive</div><h3>사진과 편지 보관함</h3><p>함께한 사진과 서로에게 남기는 편지를 모아 두자.</p>
+  <div class="form-row"><label for="memoryTitle">제목</label><input id="memoryTitle" maxlength="60" placeholder="예: 오늘의 작은 행복"></div>
+  <div class="form-row"><label for="memoryText">편지 또는 추억</label><textarea id="memoryText" maxlength="1200" placeholder="기억하고 싶은 순간을 적어 줘."></textarea></div>
+  <div class="form-row"><label for="memoryPhoto">사진 첨부 (선택)</label><input id="memoryPhoto" type="file" accept="image/*"></div>
+  <button onclick="addMemory()">추억 저장하기</button>
+  <div class="memory-list" id="memoryList"></div>
+ </article>
+ <article class="panel">
+  <div class="sub">Busan getaway</div><h3>부산 여행 체크리스트</h3><p>12월 25일 부산 여행을 위해 준비물을 하나씩 체크해 보자.</p>
+  <div class="checklist" id="tripChecklist"></div>
+  <div class="form-row"><label for="customTask">추가할 준비물</label><input id="customTask" maxlength="60" placeholder="예: 보조배터리 챙기기"></div>
+  <button onclick="addTask()">준비물 추가</button>
+ </article>
+ <article class="panel">
+  <div class="sub">A little promise</div><h3>우리의 마지막 편지</h3><p>크리스마스 당일에 열리는 특별한 편지야. 미리 내용을 준비해 둘 수 있어.</p>
+  <div class="form-row"><label for="finalLetter">크리스마스 편지</label><textarea id="finalLetter" maxlength="1800" placeholder="메리 크리스마스, 내 사랑..."></textarea></div>
+  <button onclick="saveFinalLetter()">편지 저장하기</button>
+  <div id="finalStatus" class="sync-status">12월 25일에 특별한 편지가 열려.</div>
+  <div class="final-card" id="finalCard"><div class="eyebrow">DECEMBER 25 · JUST FOR YOU</div><h3>Our Christmas Letter</h3><p id="finalLetterDisplay"></p><div class="ornament">✧</div></div>
+ </article>
+ <article class="panel">
+  <div class="sub">Together, anywhere</div><h3>둘이 함께 기록하기</h3><p>기본 기록은 현재 기기에 저장돼. 두 사람 사이에서 기록을 자동으로 동기화하려면 Firebase 연결 정보가 필요해.</p>
+  <button onclick="toggleSettings()">이름 / 공유 설정</button>
+  <div class="sync-status" id="syncStatus">현재 저장 방식: <strong>이 기기에 저장</strong><br>동기화 연결을 설정하지 않아도 페이지는 사용할 수 있어.</div>
+ </article>
+</section>
+<section class="settings" id="settings">
+ <h3>우리의 설정</h3>
+ <label for="partner1">첫 번째 이름 또는 애칭</label><input id="partner1" maxlength="30" placeholder="예: 시연">
+ <label for="partner2">두 번째 이름 또는 애칭</label><input id="partner2" maxlength="30" placeholder="예: 내 사랑">
+ <hr style="border:0;border-top:1px solid #5d4a36;margin:20px 0">
+ <button class="save" onclick="saveSettings()">설정 저장하기</button>
+ <div class="sync-status">이 버전은 별도 연결 없이 작동해. 기록은 현재 브라우저에 저장되며, 두 사람 사이 자동 동기화는 웹 배포와 데이터베이스 연결이 필요해.</div>
+</section>
+<div class="note-card"><div class="star">✧ ✦ ✧</div><h3>To my favorite person</h3><p>크리스마스가 특별한 건 반짝이는 불빛 때문만은 아니야.<br>너랑 함께 기다리고, 같이 웃을 수 있어서 특별해.<br>우리의 겨울을 하나씩 모아 보자.</p></div>
+</main>
+<footer>OUR LITTLE CHRISTMAS · MADE FOR TWO</footer>
+<div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="backdropClose(event)"><div class="modal"><button class="close" aria-label="닫기" onclick="closeModal()">×</button><div class="modal-number" id="modalNumber">OCTOBER 29</div><div class="gift-icon" id="modalIcon">✧</div><h3 id="modalTitle">오늘의 작은 선물</h3><p id="modalBody"></p><p class="tiny" id="modalFoot">오늘도 우리에게 작은 추억 하나.</p></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const gifts=[
+["첫 번째 편지","오늘부터 크리스마스까지, 하루에 하나씩 우리만의 추억을 모아 보자. 이 페이지를 열 때마다 네가 조금 더 웃었으면 좋겠어.","💌"],
+["우리의 겨울 노래","각자 크리스마스 분위기가 나는 노래를 하나씩 골라서 서로에게 보내 주기.","♫"],
+["사진 한 장","서로가 좋아하는 사진 한 장을 골라서 왜 좋아하는지 이야기해 보기.","♡"],
+["겨울 간식 데이트","따뜻한 붕어빵이나 호떡을 같이 먹으러 가기. 네가 먹고 싶은 간식도 추가해 줘.","☕"],
+["우리 추억 퀴즈","우리의 첫 데이트에서 가장 기억에 남는 순간은 뭐였을까? 서로 답을 맞혀 보자.","✧"],
+["칭찬 세 가지","오늘은 서로의 좋은 점 세 가지씩 말해 주기. 부끄러워도 꼭 말하기!","♥"],
+["데이트 쿠폰","오늘의 쿠폰: 네가 고르는 데이트 코스에 불평 없이 함께하기.","🎟"],
+["부산에서 먹고 싶은 것","부산에 가면 꼭 먹고 싶은 메뉴를 하나씩 정하고 여행 리스트에 추가하기.","♡"],
+["고마웠던 순간","올해 상대방에게 고마웠던 순간 하나를 떠올려서 말해 주기.","✉"],
+["밸런스 게임","바다 보며 따뜻한 어묵 먹기 vs 예쁜 카페에서 디저트 먹기. 부산에서는 둘 다 할 수 있을까?","☕"],
+["우리만의 별명","서로에게 어울리는 겨울 별명을 하나씩 지어 주기.","✦"],
+["폴라로이드 미션","부산 여행에서 꼭 남기고 싶은 커플 사진 포즈를 정하기.","▣"],
+["작은 소원권","상대방이 들어줄 수 있는 귀여운 소원 하나씩 말하기.","🎁"],
+["좋아하는 이유","서로를 좋아하는 이유 중 평소에 자주 말하지 않았던 것 하나 알려 주기.","♥"],
+["여행 플레이리스트","부산 가는 길에 같이 들을 노래를 세 곡씩 골라 플레이리스트 만들기.","♫"],
+["우리의 겨울 버킷리스트","눈 구경하기, 크리스마스 마켓 가기, 사진 남기기 등 하고 싶은 일을 체크하기.","✧"],
+["깜짝 칭찬 카드","상대방이 오늘 가장 멋졌던 순간을 구체적으로 말해 주기.","💌"],
+["부산 여행 미션","여행 중 빨간색 크리스마스 장식을 발견하면 같이 사진 찍기.","📷"],
+["따뜻한 약속","추운 날 서로에게 해 주고 싶은 작은 배려 하나씩 약속하기.","♡"],
+["선물 힌트","서로 준비한 선물이 있다면 정답은 말하지 말고 힌트만 하나 주기.","🎁"],
+["우리의 베스트 순간","올해 함께한 순간 중 다시 한번 돌아가고 싶은 하루를 골라 보기.","✉"],
+["크리스마스 소원","올해 크리스마스에 꼭 이루어졌으면 하는 소원을 서로에게 말하기.","⭐"],
+["내일은 크리스마스 이브","내일 함께 하고 싶은 일을 세 가지 정하고 기대하는 마음 나누기.","🕯"],
+["마지막 편지","메리 크리스마스. 올해 내 곁에 있어 줘서 고마워. 우리 앞으로도 계절마다 추억을 하나씩 만들자.","♥"]
+,
+["오늘의 안부","오늘 하루 어땠는지 서로에게 가장 먼저 들려주기.","♡"],
+["우리의 첫인상","처음 만났을 때 서로의 첫인상을 다시 이야기해 보기.","✉"],
+["좋아하는 표정","상대방이 가장 귀엽다고 생각하는 표정 알려 주기.","♥"],
+["겨울 데이트 후보","올겨울 같이 해 보고 싶은 데이트 하나씩 찾아보기.","☕"],
+["우리만 아는 말","둘만 알아듣는 말이나 유행어를 하나 떠올려 보기.","✧"],
+["응원 한마디","요즘 상대방이 잘하고 있는 일을 구체적으로 칭찬해 주기.","💌"],
+["추억의 사진","갤러리에서 함께한 사진 한 장을 골라 다시 보기.","▣"],
+["같이 먹고 싶은 메뉴","다음 데이트에서 함께 먹고 싶은 메뉴를 정하기.","♡"],
+["서로의 취향","상대방이 좋아하는 것 중 내가 새롭게 알게 된 것 말하기.","✦"],
+["작은 감사","오늘 고마웠던 일 하나를 꼭 말로 전하기.","✉"],
+["우리의 영화","함께 보고 싶은 영화나 드라마를 하나 골라 저장하기.","♫"],
+["포근한 약속","추운 날 서로를 위해 해 줄 수 있는 작은 배려 정하기.","♥"],
+["올해의 유행어","올해 우리 사이에서 가장 많이 쓴 말을 꼽아 보기.","✧"],
+["서로에게 질문","평소 궁금했지만 묻지 않았던 질문 하나씩 하기.","💌"],
+["내가 좋아하는 순간","함께 있을 때 가장 편안하고 행복한 순간을 말하기.","♡"],
+["미래의 우리","내년 이맘때 함께 하고 싶은 일을 상상해 보기.","⭐"],
+["데이트 사진 미션","다음 만남에서 서로의 자연스러운 모습을 한 장씩 찍기.","▣"],
+["겨울 플레이리스트","지금 기분에 어울리는 노래를 서로 한 곡씩 추천하기.","♫"],
+["부산 카운트다운","부산에서 가장 기대되는 순간을 하나씩 말하기.","🌊"],
+["여행 가방 상상하기","부산 여행에 꼭 가져가고 싶은 물건 하나씩 말하기.","🎁"],
+["바다 앞에서","부산 바다를 함께 보게 되면 가장 먼저 하고 싶은 말 정하기.","♡"],
+["서로의 장점","상대방의 장점 중 오늘 꼭 알려 주고 싶은 것 하나 말하기.","♥"],
+["올해의 베스트 데이트","올해 가장 기억에 남는 데이트를 서로 골라 보기.","✉"],
+["크리스마스 간식","크리스마스에 같이 먹고 싶은 간식 정하기.","☕"],
+["작은 소원 들어주기","상대방의 소소한 소원 하나를 들어주기.","🎟"],
+["우리의 겨울 사진","크리스마스 분위기가 나는 사진 포즈를 미리 정하기.","▣"],
+["함께 웃었던 순간","올해 둘이 가장 크게 웃었던 순간을 떠올려 보기.","✧"],
+["사랑 표현 연습","평소보다 조금 더 솔직하게 애정을 표현하기.","♥"],
+["여행 전 체크","부산 여행 준비물과 예약 사항을 함께 확인하기.","🎁"],
+["서로에게 편지","짧아도 좋으니 서로에게 고마운 점을 글로 남기기.","💌"],
+["크리스마스 전날","내일 함께하고 싶은 일과 기대되는 순간 세 가지 정하기.","🕯"],
+["부산으로 떠나는 날","드디어 부산 여행 날! 이동 중에도 서로의 사진과 추억을 남기기.","🌊"],
+["크리스마스 아침","눈을 뜨면 서로에게 메리 크리스마스 인사를 건네기.","⭐"],
+["마지막 선물","올해 함께해 줘서 고마워. 앞으로도 우리만의 추억을 하나씩 만들어 가자.","♥"]
+];
+const defaultTasks=["기차표 / 교통편 확인","숙소 예약 확인","신분증과 카드 챙기기","충전기와 보조배터리","따뜻한 겉옷 챙기기","부산 맛집 리스트 저장","카메라 / 사진 용량 확인"];
+const keys={opened:"olc_opened_v3",settings:"olc_settings_v3",memories:"olc_memories_v3",tasks:"olc_tasks_v3",final:"olc_final_v3",missions:"olc_missions_v1"};
+let opened=read(keys.opened,[]),settings=read(keys.settings,{}),memories=read(keys.memories,[]),tasks=read(keys.tasks,defaultTasks.map((t,i)=>({id:"d"+i,text:t,done:false}))),finalLetter=localStorage.getItem(keys.final)||"",completedMissions=read(keys.missions,[]),syncing=false;
+function read(k,fallback){try{const v=localStorage.getItem(k);return v?JSON.parse(v):fallback}catch(e){return fallback}}
+function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+const dailyMissions=[
+"서로에게 고마웠던 일 하나씩 말해 주기.","상대방의 좋은 점을 한 가지 구체적으로 칭찬하기.","함께 찍은 사진 한 장을 골라 추억 이야기하기.","따뜻한 음료를 마시며 오늘 하루 이야기하기.","서로의 첫인상 중 기억나는 부분을 말해 주기.","다음 데이트에서 하고 싶은 일 하나씩 정하기.","서로에게 귀여운 겨울 별명 지어 주기.","부산에서 같이 먹고 싶은 메뉴 하나씩 고르기.","올해 함께해서 가장 좋았던 순간 떠올리기.","서로에게 짧은 응원 한마디 남기기.","둘만 아는 말이나 유행어 하나 떠올리기.","부산에서 찍고 싶은 커플 사진 포즈 정하기.","상대방에게 작은 소원 하나씩 말하기.","함께 듣고 싶은 노래 한 곡씩 추천하기.","서로의 요즘 최애 간식 맞혀 보기.","올해 가장 크게 웃었던 순간 이야기하기.","서로가 좋아하는 표정이나 행동 말해 주기.","부산 여행에서 가장 기대되는 순간 공유하기.","상대방이 해 줘서 고마웠던 배려 말하기.","함께 보고 싶은 영화나 드라마 고르기.","내년 이맘때 같이 하고 싶은 일 상상하기.","서로에게 질문 하나씩 하고 답 듣기.","부산 여행 준비물 한 가지씩 확인하기.","서로에게 크리스마스에 듣고 싶은 말 알려 주기.","오늘의 기분을 날씨로 표현하고 이유 말하기.","서로의 장점 세 가지 중 하나를 골라 말하기.","다음 만남에서 남길 사진의 콘셉트 정하기.","서로에게 어울리는 크리스마스 캐럴 골라 주기.","상대방이 좋아하는 음식을 기억하는지 퀴즈 내기.","올해 가장 기억에 남는 데이트 다시 이야기하기.","상대방을 웃게 할 짧은 메시지 보내기.","같이 먹고 싶은 겨울 간식 정하기.","서로에게 고마운 점을 한 문장으로 남기기.","부산에서 바다를 보면 가장 먼저 하고 싶은 말 정하기.","서로의 요즘 작은 고민을 들어 주기.","둘이 함께 만들고 싶은 추억 하나 정하기.","올해 상대방에게 배운 점 하나 말하기.","크리스마스 당일 꼭 하고 싶은 일 세 가지 정하기.","서로에게 짧은 손편지나 메모 남기기.","부산 여행에서 꼭 남길 사진 한 장 상상하기.","상대방에게 따뜻한 말 한마디 건네기.","둘이 함께한 순간 중 다시 돌아가고 싶은 하루 고르기.","여행 가는 길에 들을 노래를 정하기.","서로에게 해 주고 싶은 작은 배려 약속하기.","올해의 우리를 한 단어로 표현하기.","크리스마스에 함께 먹을 간식 정하기.","서로에게 가장 잘 어울리는 겨울 이모티콘 고르기.","내일 함께할 일을 기대하며 한 가지씩 말하기.","부산 여행 전 서로의 짐을 한 번 더 확인하기.","함께 찍은 사진을 한 장 골라 앨범에 저장하기.","서로에게 메리 크리스마스 인사를 미리 연습하기.","올해 함께해 줘서 고맙다고 말하기.","부산에서 서로의 사진을 예쁘게 찍어 주기.","바다를 보며 함께 기억하고 싶은 순간 만들기.","서로의 소원을 하나씩 응원해 주기.","여행 중 가장 즐거웠던 순간을 사진으로 남기기.","크리스마스 하루를 함께 즐기고 오늘의 추억을 기록하기.","마지막으로 서로에게 고마운 점과 내년의 약속 하나씩 말하기."
+];
+function currentMissionIndex(){return Math.max(0,Math.min(57,unlockDay()-1));}
+function missionDone(index=currentMissionIndex()){return completedMissions.includes(index);}
+function completeMission(){const index=currentMissionIndex();if(unlockDay()<1){toast("10월 29일부터 첫 미션이 열려.");return}if(missionDone(index)){toast("오늘 미션은 이미 완료했어. 내일 새로운 미션이 열려!");return}completedMissions.push(index);save(keys.missions,completedMissions);renderMission();renderVillage();syncRemote();toast("미션 완료! 우리 마을에 별빛이 하나 늘었어.");}
+function renderMission(){const index=currentMissionIndex(),done=missionDone(index),openedDay=Math.max(1,unlockDay());document.getElementById("missionDate").textContent=`${doorDateLabel(openedDay)} · TODAY'S LITTLE QUEST`;document.getElementById("missionTitle").textContent=done?"오늘의 미션 완료!":"오늘의 작은 미션";document.getElementById("missionTask").textContent=dailyMissions[index]||dailyMissions[0];document.getElementById("missionCompleteBtn").disabled=done||unlockDay()<1;document.getElementById("missionCompleteBtn").textContent=done?"오늘 미션 완료했어 ✓":"미션 완료하고 별 받기";document.getElementById("missionDoneNote").textContent=done?"잘했어! 오늘의 별빛을 마을에 더했어.":"둘이 함께 해 보고 완료 버튼을 눌러 줘.";document.getElementById("missionCount").textContent=`완료 미션 ${completedMissions.length}개`;document.getElementById("starCount").textContent=`모은 별빛 ${completedMissions.length}개`;document.getElementById("streakCount").textContent=`연속 미션 ${missionStreak()}일`;const badges=[{n:1,t:"첫 별빛 ✦"},{n:3,t:"작은 반짝임 ✧"},{n:7,t:"일주일의 추억 ♡"},{n:14,t:"겨울 수집가 ❄"},{n:30,t:"크리스마스 마법사 ★"}];const row=document.getElementById("badgeRow");row.innerHTML="";badges.forEach(b=>{const span=document.createElement("span");span.className="badge-chip"+(completedMissions.length>=b.n?"":" locked");span.textContent=(completedMissions.length>=b.n?"✓ ":"🔒 ")+b.t;row.appendChild(span)});}
+function missionStreak(){let streak=0;const today=currentMissionIndex();for(let i=today;i>=0&&completedMissions.includes(i);i--)streak++;return streak;}
+function renderEnding(){const available=new Date()>=christmas(),card=document.getElementById("endingCard"),btn=document.getElementById("endingButton");card.classList.toggle("unlocked",available);btn.disabled=!available;document.getElementById("endingStatus").textContent=available?"✦ 최종 엔딩이 열렸어!":"🔒 2026년 12월 25일에 열려";document.getElementById("endingTitle").textContent=available?"메리 크리스마스, 우리 둘":"우리의 마지막 퀘스트";document.getElementById("endingDescription").textContent=available?`선물 ${opened.length}개와 미션 ${completedMissions.length}개를 함께 모았어. 이제 부산에서 새로운 추억을 만들 차례야.`:"12월 25일이 되면 마지막 장이 열려. 그전까지 선물과 미션을 하나씩 모아 보자.";}
+function openEnding(){if(new Date()<christmas()){toast("마지막 퀘스트는 12월 25일에 열려.");return}document.getElementById("modalNumber").textContent="DECEMBER 25 · OUR GRAND FINALE";document.getElementById("modalIcon").textContent="🌟";document.getElementById("modalTitle").textContent="우리의 크리스마스 엔딩";document.getElementById("modalBody").textContent=`메리 크리스마스!\n\n우리가 함께 연 선물: ${opened.length}/58\n함께 완료한 미션: ${completedMissions.length}개\n\n작은 미션 하나하나가 모여 우리의 겨울 이야기가 되었어. 오늘 부산에서 새로운 추억을 만들자. 서로에게 고마웠던 점과 내년에 함께 하고 싶은 일도 하나씩 나눠 봐.\n\n${finalLetter||"올해 내 곁에 있어 줘서 고마워. 앞으로도 우리만의 계절을 함께 만들자."}`;document.getElementById("modalFoot").textContent="OUR LITTLE CHRISTMAS · THE ENDING IS YOURS";document.getElementById("modal").classList.add("show");document.body.style.overflow="hidden";}
+function unlockDay(){const start=new Date(2026,9,29),now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());return Math.max(0,Math.min(58,Math.floor((today-start)/86400000)+1))}
+function doorDateLabel(n){const d=new Date(2026,9,29);d.setDate(d.getDate()+n-1);return `${d.getMonth()+1}.${String(d.getDate()).padStart(2,"0")}`}
+function christmas(){return new Date(2026,11,25,0,0,0)}
+function updateCountdown(){const now=new Date(),diff=Math.max(0,christmas()-now);document.getElementById("days").textContent=Math.floor(diff/86400000);document.getElementById("hours").textContent=String(Math.floor(diff%86400000/3600000)).padStart(2,"0");document.getElementById("mins").textContent=String(Math.floor(diff%3600000/60000)).padStart(2,"0");document.getElementById("secs").textContent=String(Math.floor(diff%60000/1000)).padStart(2,"0");
+const tripDate=new Date(2026,11,25),todayTrip=new Date(now.getFullYear(),now.getMonth(),now.getDate()),tripDays=Math.ceil((tripDate-todayTrip)/86400000);document.getElementById("trip-countdown").textContent=tripDays>0?`부산 여행까지 D-${tripDays}`:tripDays===0?"오늘은 부산 여행 날!":"우리의 부산 여행 추억";
+const finalVisible=now>=christmas();document.getElementById("finalCard").classList.toggle("show",finalVisible);document.getElementById("finalLetterDisplay").textContent=finalLetter||"메리 크리스마스, 내 사랑.\n올해 내 곁에 있어 줘서 고마워. 앞으로도 우리만의 계절을 함께 만들자."; }
+function renderDoors(){const wrap=document.getElementById("doors");wrap.innerHTML="";const current=unlockDay();gifts.forEach((g,i)=>{const n=i+1,isOpen=opened.includes(n),available=current>=n;const outer=document.createElement("div");outer.className="door"+(isOpen?" opened":"")+(current===n?" today":"")+(available||isOpen?"":" locked");const b=document.createElement("button");b.className="door-button";b.disabled=!available&&!isOpen;b.innerHTML=`<span class="num">${doorDateLabel(n)}</span><span class="symbol">${isOpen?"✦":available?"✧":"♙"}</span><span class="caption">${isOpen?"OPENED":available?"OPEN ME":"WAIT FOR IT"}</span>`;b.setAttribute("aria-label",`${doorDateLabel(n)} 선물 ${available?"열기":"잠김"}`);b.addEventListener("click",()=>openGift(n));outer.appendChild(b);wrap.appendChild(outer)});
+document.getElementById("progressText").textContent=`${opened.length} / 58 OPENED`;document.getElementById("progressBar").style.width=(opened.length/58*100)+"%";renderVillage();renderMission();renderEnding();}
+function renderVillage(){const count=Math.min(58,opened.length+completedMissions.length),missionCount=completedMissions.length,scene=document.getElementById("villageScene"),tree=document.getElementById("villageTree");scene.querySelectorAll(".house").forEach((h,i)=>h.classList.toggle("lit",count>i*2));tree.classList.toggle("lit",count>=1);tree.classList.remove("growth-0","growth-1","growth-2","growth-3");tree.classList.add(missionCount>=10?"growth-3":missionCount>=5?"growth-2":missionCount>=1?"growth-1":"growth-0");document.getElementById("villageProgress").textContent=`${count} LIGHTS IN OUR VILLAGE · 선물 ${opened.length}개 + 미션 ${missionCount}개`;document.getElementById("villageCaption").textContent=missionCount===0?(count===0?"우리의 첫 불빛을 기다리는 중":"트리에 첫 장식을 달아 볼까?"):missionCount<5?"첫 번째 장식들이 트리에 반짝이고 있어":missionCount<10?"우리의 트리가 점점 풍성해지고 있어":"우리의 트리가 크리스마스 별빛으로 가득해!";renderBusanTicket();} 
+function sparkleAt(el){const rect=el.getBoundingClientRect();for(let i=0;i<7;i++){const sp=document.createElement("span");sp.className="sparkle-burst";sp.textContent=["✦","✧","·","✶"][i%4];sp.style.left=(rect.left+rect.width/2+window.scrollX)+"px";sp.style.top=(rect.top+rect.height/2+window.scrollY)+"px";sp.style.setProperty("--dx",(Math.random()*100-50)+"px");sp.style.setProperty("--dy",(-25-Math.random()*65)+"px");document.body.appendChild(sp);setTimeout(()=>sp.remove(),950)}}
+function interactDecor(kind){const labels={tree:"우리의 트리에 작은 소원을 걸었어!",house:"따뜻한 집 안에서 크리스마스 준비 중이래.",bell:"딩동댕! 마을에 종소리가 울려 퍼져.",snowman:"눈사람이 메리 크리스마스 인사를 보냈어!"};const el=kind==="tree"?document.getElementById("villageTree"):kind==="house"?null:document.querySelector(".village-decor."+kind);if(el)sparkleAt(el);if(kind==="tree"&&musicOn&&musicCtx)playBell(783.99,musicCtx.currentTime);else if((kind==="bell"||kind==="snowman")&&musicOn&&musicCtx)playBell(kind==="bell"?1046.5:880,musicCtx.currentTime);toast(labels[kind]||"마을에 작은 마법이 생겼어.");}
+function renderBusanTicket(){const available=new Date()>=christmas(),card=document.getElementById("busanTicket"),btn=document.getElementById("ticketRevealBtn");if(!card||!btn)return;card.classList.toggle("revealed",available);btn.disabled=!available;document.getElementById("ticketLock").textContent=available?"✦ 우리 둘의 부산 여행 티켓이 공개됐어!":"🔒 크리스마스 당일에 공개돼";document.getElementById("ticketCopy").textContent=available?`메리 크리스마스! 오늘은 우리가 기다리던 부산 여행 날이야. 선물 ${opened.length}개와 미션 ${completedMissions.length}개의 추억을 안고, 새로운 하루를 함께 시작하자.`:"12월 25일에 이 티켓이 열려. 그날은 우리 둘이 새로운 추억을 만들러 떠나는 날이야.";}
+function revealBusanTicket(){if(new Date()<christmas()){toast("부산 여행 티켓은 12월 25일에 공개돼.");return}document.getElementById("modalNumber").textContent="25 DECEMBER 2026 · BOARDING PASS";document.getElementById("modalIcon").textContent="🎟️";document.getElementById("modalTitle").textContent="우리 둘의 부산 여행 티켓";document.getElementById("modalBody").textContent=`목적지: 부산
+날짜: 2026년 12월 25일
+함께 모은 선물: ${opened.length}/58
+완료한 커플 미션: ${completedMissions.length}개
+
+오늘은 일정표보다 함께하는 순간을 더 많이 기억하자. 바다도 보고, 맛있는 것도 먹고, 우리 사진도 많이 남기자.
+
+메리 크리스마스, 우리 둘의 여행을 시작합니다!`;document.getElementById("modalFoot").textContent="BOARDING PASS · TWO HEARTS, ONE JOURNEY";document.getElementById("modal").classList.add("show");document.body.style.overflow="hidden";}
+function openGift(n){if(n>unlockDay()&&!opened.includes(n)){toast("아직 열 수 없는 선물이야. 날짜가 되면 다시 와 줘.");return}const g=gifts[n-1];if(!opened.includes(n)){opened.push(n);save(keys.opened,opened);renderDoors();syncRemote()}document.getElementById("modalNumber").textContent=`${doorDateLabel(n)} · OUR LITTLE CHRISTMAS`;document.getElementById("modalIcon").textContent=g[2];document.getElementById("modalTitle").textContent=g[0];document.getElementById("modalBody").textContent=g[1];document.getElementById("modalFoot").textContent=`우리의 작은 크리스마스 · ${doorDateLabel(n)} (${n}/58)`;renderEnding();document.getElementById("modal").classList.add("show");document.body.style.overflow="hidden";}
+function closeModal(){document.getElementById("modal").classList.remove("show");document.body.style.overflow=""}function backdropClose(e){if(e.target.id==="modal")closeModal()}
+function renderMemories(){const list=document.getElementById("memoryList");list.innerHTML="";if(!memories.length){list.innerHTML='<p style="font-size:10px;color:#a9967d">아직 저장된 추억이 없어. 첫 번째 기록을 남겨 봐.</p>';return}memories.slice().reverse().forEach(m=>{const item=document.createElement("div");item.className="memory-item";const icon=document.createElement("div");icon.className="mem-icon";icon.textContent=m.photo?"▧":"✉";const info=document.createElement("div");info.style.minWidth="0";const strong=document.createElement("strong");strong.textContent=m.title;const small=document.createElement("small");small.textContent=m.date;info.append(strong,small);item.append(icon,info);if(m.photo){const img=document.createElement("img");img.src=m.photo;img.alt="추억 사진";img.style.cssText="width:42px;height:42px;object-fit:cover;border:1px solid #8a704b";item.append(img)}const btn=document.createElement("button");btn.textContent="보기";btn.onclick=()=>{document.getElementById("modalNumber").textContent=m.date;document.getElementById("modalIcon").textContent=m.photo?"▧":"✉";document.getElementById("modalTitle").textContent=m.title;document.getElementById("modalBody").textContent=m.text+(m.photo?"\n\n※ 사진은 저장한 기기에서만 표시돼.":"");document.getElementById("modalFoot").textContent="OUR MEMORY ARCHIVE";document.getElementById("modal").classList.add("show");document.body.style.overflow="hidden"};item.append(btn);list.append(item)})}
+async function addMemory(){const title=document.getElementById("memoryTitle").value.trim()||"우리의 작은 추억",text=document.getElementById("memoryText").value.trim(),file=document.getElementById("memoryPhoto").files[0];if(!text&&!file){toast("편지나 사진 중 하나를 추가해 줘.");return}let photo="";if(file){if(file.size>1.5*1024*1024){toast("사진은 1.5MB 이하로 선택해 줘.");return}photo=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}memories.push({id:Date.now().toString(),title,text,photo,date:new Date().toLocaleDateString("ko-KR")});try{save(keys.memories,memories)}catch(e){toast("저장 공간이 부족해. 더 작은 사진으로 시도해 줘.");return}document.getElementById("memoryTitle").value="";document.getElementById("memoryText").value="";document.getElementById("memoryPhoto").value="";renderMemories();syncRemote();toast("추억을 보관함에 저장했어.");}
+function renderTasks(){const list=document.getElementById("tripChecklist");list.innerHTML="";tasks.forEach(t=>{const label=document.createElement("label");label.className="check-row"+(t.done?" done":"");const input=document.createElement("input");input.type="checkbox";input.checked=!!t.done;input.onchange=()=>{t.done=input.checked;save(keys.tasks,tasks);renderTasks();syncRemote()};const span=document.createElement("span");span.textContent=t.text;label.append(input,span);list.append(label)})}
+function addTask(){const input=document.getElementById("customTask"),text=input.value.trim();if(!text)return;tasks.push({id:Date.now().toString(),text,done:false});save(keys.tasks,tasks);input.value="";renderTasks();syncRemote()}
+function saveFinalLetter(){finalLetter=document.getElementById("finalLetter").value.trim();localStorage.setItem(keys.final,finalLetter);updateCountdown();syncRemote();document.getElementById("finalStatus").textContent="편지를 저장했어. 크리스마스 당일에 공개돼.";toast("크리스마스 편지를 저장했어.");}
+function toggleSettings(){const s=document.getElementById("settings");s.classList.toggle("show");document.getElementById("partner1").value=settings.partner1||"";document.getElementById("partner2").value=settings.partner2||"";s.scrollIntoView({behavior:"smooth",block:"center"})}
+function saveSettings(){settings={...settings,partner1:document.getElementById("partner1").value.trim(),partner2:document.getElementById("partner2").value.trim()};save(keys.settings,settings);updateCountdown();document.getElementById("settings").classList.remove("show");toast("우리의 설정을 저장했어.");}
+function toggleMusic(){const btn=document.getElementById("musicToggle");if(musicOn){musicOn=false;if(musicTimer)clearInterval(musicTimer);if(musicCtx)musicCtx.suspend();btn.textContent="♫ 캐럴 켜기";btn.classList.remove("playing");btn.setAttribute("aria-pressed","false");return}const AC=window.AudioContext||window.webkitAudioContext;if(!AC){toast("이 브라우저에서는 배경 음악을 지원하지 않아.");return}if(!musicCtx)musicCtx=new AC();musicCtx.resume();musicOn=true;const tick=()=>{if(!musicOn)return;const now=musicCtx.currentTime;const step=noteIndex%jingleMelody.length;playBell(jingleMelody[step],now);if(step%2===0){const chord=jingleChords[Math.floor(step/2)%jingleChords.length];playSoftChord(chord,now);playBass(chord[0]/2,now)}noteIndex++};tick();musicTimer=setInterval(tick,390);btn.textContent="♫ 캐럴 끄기";btn.classList.add("playing");btn.setAttribute("aria-pressed","true")}
+let musicCtx=null,musicTimer=null,musicOn=false,noteIndex=0;
+// Jingle Bells, arranged as a gentle music-box style instrumental with soft harmony.
+const jingleMelody=[659.25,659.25,659.25,659.25,659.25,659.25,659.25,783.99,523.25,587.33,659.25,698.46,698.46,698.46,698.46,698.46,659.25,659.25,659.25,659.25,587.33,587.33,659.25,587.33,783.99,659.25,659.25,659.25,659.25,659.25,659.25,659.25,783.99,523.25,587.33,659.25,698.46,698.46,698.46,698.46,698.46,659.25,659.25,659.25,783.99,783.99,698.46,587.33,523.25];
+const jingleChords=[[261.63,329.63,392.00],[261.63,329.63,392.00],[196.00,246.94,392.00],[196.00,246.94,392.00],[261.63,329.63,392.00],[261.63,329.63,392.00],[196.00,246.94,392.00],[196.00,246.94,392.00],[349.23,440.00,523.25],[349.23,440.00,523.25],[392.00,493.88,587.33],[392.00,493.88,587.33]];
+function playBell(freq,when){const osc=musicCtx.createOscillator(),gain=musicCtx.createGain();osc.type="sine";osc.frequency.setValueAtTime(freq,when);gain.gain.setValueAtTime(.0001,when);gain.gain.exponentialRampToValueAtTime(.075,when+.018);gain.gain.exponentialRampToValueAtTime(.0001,when+.55);osc.connect(gain);gain.connect(musicCtx.destination);osc.start(when);osc.stop(when+.58)}
+function playSoftChord(notes,when){notes.forEach((freq,i)=>{const osc=musicCtx.createOscillator(),gain=musicCtx.createGain();osc.type="triangle";osc.frequency.setValueAtTime(freq,when);gain.gain.setValueAtTime(.0001,when);gain.gain.exponentialRampToValueAtTime(.018,when+.035);gain.gain.exponentialRampToValueAtTime(.0001,when+.34);osc.connect(gain);gain.connect(musicCtx.destination);osc.start(when+i*.012);osc.stop(when+.36)})}
+function playBass(freq,when){const osc=musicCtx.createOscillator(),gain=musicCtx.createGain();osc.type="sine";osc.frequency.setValueAtTime(freq,when);gain.gain.setValueAtTime(.0001,when);gain.gain.exponentialRampToValueAtTime(.035,when+.02);gain.gain.exponentialRampToValueAtTime(.0001,when+.28);osc.connect(gain);gain.connect(musicCtx.destination);osc.start(when);osc.stop(when+.3)}
+(function snowfall(){const canvas=document.getElementById("snowCanvas"),ctx=canvas.getContext("2d");let w,h,flakes=[];const reduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;function resize(){w=window.innerWidth;h=window.innerHeight;canvas.width=w*devicePixelRatio;canvas.height=h*devicePixelRatio;canvas.style.width=w+"px";canvas.style.height=h+"px";ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);flakes=Array.from({length:Math.min(70,Math.floor(w/7))},()=>({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.8+.6,v:Math.random()*.6+.2,d:Math.random()*.5-.25,a:Math.random()*.5+.2}))}function draw(){ctx.clearRect(0,0,w,h);flakes.forEach(f=>{ctx.beginPath();ctx.fillStyle=`rgba(255,244,221,${f.a})`;ctx.arc(f.x,f.y,f.r,0,Math.PI*2);ctx.fill();if(!reduced){f.y+=f.v;f.x+=f.d;if(f.y>h+4){f.y=-4;f.x=Math.random()*w}if(f.x>w+4)f.x=-4;if(f.x< -4)f.x=w}});if(!reduced)requestAnimationFrame(draw)}resize();draw();window.addEventListener("resize",resize)})();
+function toast(t){const el=document.getElementById("toast");el.textContent=t;el.classList.add("show");clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove("show"),2600)}
+// Optional Firebase sync: requires Firebase project + Firestore database and correct security rules.
+function collectData(){return {opened,memories:memories.map(({id,title,text,date})=>({id,title,text,date})),tasks,finalLetter,updatedAt:Date.now()}}
+async function syncRemote(){/* 이 독립형 파일에서는 현재 기기에 저장해. */}
+updateCountdown();renderDoors();renderMission();renderEnding();renderMemories();renderTasks();renderBusanTicket();document.getElementById("finalLetter").value=finalLetter;document.getElementById("villageTree").addEventListener("click",()=>interactDecor("tree"));document.getElementById("villageTree").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();interactDecor("tree")}});document.querySelectorAll(".village .house").forEach(h=>{h.addEventListener("click",()=>{sparkleAt(h);interactDecor("house")});h.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();sparkleAt(h);interactDecor("house")}})});setInterval(()=>{updateCountdown();renderEnding();renderBusanTicket();},1000);
+</script>
+</body>
+</html>
